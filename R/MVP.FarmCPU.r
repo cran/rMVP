@@ -55,7 +55,7 @@
 #' genotype <- attach.big.matrix(genoPath)
 #' genotype <- genotype[, idx]
 #' print(dim(genotype))
-#' mapPath <- system.file("extdata", "07_other", "mvp.map", package = "rMVP")
+#' mapPath <- system.file("extdata", "06_mvp-impute", "mvp.imp.geno.map", package = "rMVP")
 #' map <- read.table(mapPath , head = TRUE)
 #' 
 #' farmcpu <- MVP.FarmCPU(phe=phenotype, geno=genotype, map=map, maxLoop=2)
@@ -80,7 +80,7 @@
     }
 
 	map <- as.matrix(map)
-	max.chr <- max(as.numeric(map[, 2]), na.rm=TRUE)
+	suppressWarnings(max.chr <- max(as.numeric(map[, 2]), na.rm=TRUE))
 	if(is.infinite(max.chr))	max.chr <- 0
 	map.xy.index <- which(!as.numeric(map[, 2]) %in% c(0 : max.chr))
 	if(length(map.xy.index) != 0){
@@ -89,7 +89,9 @@
 			map[map[, 2] == chr.xy[i], 2] <- max.chr + i
 		}
 	}
-	map <- matrix(as.numeric(map), nrow(map))
+    map[, 1] = 1:nrow(map)
+	suppressWarnings(map <- matrix(as.numeric(map), nrow(map)))
+    if(sum(is.na(map[,3]) != 0)) stop("Non-digital characters or NAs are not allowed in map for FarmCPU")
 	
     if(!is.na(p.threshold)) QTN.threshold = max(p.threshold, QTN.threshold)
     
@@ -492,9 +494,9 @@ FarmCPU.BIN <-
         if(optimumable){
             s[s>bound]=bound
             #print("optimizing possible QTNs...")
-            GP=cbind(GM,P,NA,NA,NA)
-            mySpecify=FarmCPU.Specify(GI=GM, GP=GP, bin.size=b, inclosure.size=s)
-            seqQTN=which(mySpecify$index==TRUE)
+            #GP=cbind(GM,P,NA,NA,NA)
+            #mySpecify=FarmCPU.Specify(GI=GM, GP=GP, bin.size=b, inclosure.size=s)
+            #seqQTN=which(mySpecify$index==TRUE)
         }
         
         #Method of static

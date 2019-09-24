@@ -70,7 +70,7 @@
 #' genoPath <- system.file("extdata", "06_mvp-impute", "mvp.imp.geno.desc", package = "rMVP")
 #' genotype <- attach.big.matrix(genoPath)
 #' print(dim(genotype))
-#' mapPath <- system.file("extdata", "07_other", "mvp.map", package = "rMVP")
+#' mapPath <- system.file("extdata", "06_mvp-impute", "mvp.imp.geno.map", package = "rMVP")
 #' map <- read.table(mapPath , head = TRUE)
 #' 
 #' opts <- options(rMVP.OutputLog2File = FALSE)
@@ -91,7 +91,7 @@ function(phe, geno, map, K=NULL, nPC.GLM=NULL, nPC.MLM=NULL, nPC.FarmCPU=NULL,
          col=c("dodgerblue4","olivedrab4","violetred","darkgoldenrod1","purple4"), 
          file.output=TRUE, file.type="jpg", dpi=300, threshold=0.05, verbose=TRUE
 ) {
-    logging.initialize("MVP")
+    logging.initialize("MVP", outpath)
     
     R.ver <- Sys.info()[['sysname']]
     wind <- R.ver == 'Windows'
@@ -110,7 +110,7 @@ function(phe, geno, map, K=NULL, nPC.GLM=NULL, nPC.MLM=NULL, nPC.FarmCPU=NULL,
     vc.method <- match.arg(vc.method)
     if(nrow(phe) != ncol(geno)) stop("The number of individuals in phenotype and genotype doesn't match!")
     #list -> matrix
-    map <- as.matrix(map)
+    map <- as.matrix(map[,c(1:3)])
     na.index <- NULL
     if(!is.null(CV.GLM)){
         CV.GLM <- as.matrix(CV.GLM)
@@ -145,9 +145,10 @@ function(phe, geno, map, K=NULL, nPC.GLM=NULL, nPC.MLM=NULL, nPC.FarmCPU=NULL,
         if(!is.null(CV.FarmCPU)){CV.FarmCPU = CV.FarmCPU[seqTaxa,]}
     }
     #Data information
-    m=nrow(geno)
-    n=ncol(geno)
-    logging.log(paste("Input data has", n, "individuals,", m, "markers", sep=" "), "\n", verbose = verbose)
+    m <- nrow(geno)
+    n <- ncol(geno)
+    logging.log(paste("Input data has", n, "individuals,", m, "markers"), "\n", verbose = verbose)
+    logging.log("Phenotype: ", colnames(phe)[2],  verbose = verbose)
     
     #initial results
     glm.results <- NULL
@@ -159,22 +160,28 @@ function(phe, geno, map, K=NULL, nPC.GLM=NULL, nPC.MLM=NULL, nPC.FarmCPU=NULL,
     mlm.run <- "MLM" %in% method
     farmcpu.run <- "FarmCPU" %in% method
     
-    if(!is.null(nPC.GLM)|!is.null(nPC.MLM)|!is.null(nPC.FarmCPU)){
-        nPC <- max(nPC.GLM, nPC.MLM, nPC.FarmCPU)
-        if(nPC < 3){
-        	nPC <- 3
-        }
-    }else{
+
+    nPC <- suppressWarnings(max(nPC.GLM, nPC.MLM, nPC.FarmCPU, na.rm = TRUE))
+    if (nPC <= 0) {
         nPC <- NULL
+    } else if (nPC < 3) {
+        nPC <- 3
     }
-    if(!is.null(K)){K <- as.matrix(K)}
-    if(!is.null(nPC) | "MLM" %in% method){
-        if(is.null(K)){
-            K <- MVP.K.VanRaden(M=geno, priority=priority, cpu=ncpus, verbose = verbose)
+
+    
+    if (!is.null(K)) { K <- as.matrix(K) }
+    if (!is.null(nPC) | "MLM" %in% method) {
+        if (is.null(K)) {
+            K <- MVP.K.VanRaden(
+              M = geno, 
+              priority = priority, 
+              cpu = ncpus, 
+              verbose = verbose
+            )
         }
         logging.log("Eigen Decomposition", "\n", verbose = verbose)
-        eigenK <- eigen(K, symmetric=TRUE)
-        if(!is.null(nPC)){
+        eigenK <- eigen(K, symmetric = TRUE)
+        if (!is.null(nPC)) {
             ipca <- eigenK$vectors[, 1:nPC]
             logging.log("Deriving PCs successfully", "\n", verbose = verbose)
         }
@@ -191,7 +198,7 @@ function(phe, geno, map, K=NULL, nPC.GLM=NULL, nPC.MLM=NULL, nPC.FarmCPU=NULL,
                     CV.GLM <- cbind(ipca[,1:nPC.GLM], CV.GLM)
                 }
             }else{
-                CV.GLM <- ipca[,1:nPC.GLM]
+                if(!is.null(nPC.GLM))   CV.GLM <- ipca[,1:nPC.GLM]
             }
         }
         
@@ -202,7 +209,7 @@ function(phe, geno, map, K=NULL, nPC.GLM=NULL, nPC.MLM=NULL, nPC.FarmCPU=NULL,
                     CV.MLM <- cbind(ipca[,1:nPC.MLM], CV.MLM)
                 }
             }else{
-                CV.MLM <- ipca[,1:nPC.MLM]
+                if(!is.null(nPC.MLM))   CV.MLM <- ipca[,1:nPC.MLM]
             }
         }
         
@@ -213,7 +220,7 @@ function(phe, geno, map, K=NULL, nPC.GLM=NULL, nPC.MLM=NULL, nPC.FarmCPU=NULL,
                     CV.FarmCPU <- cbind(ipca[,1:nPC.FarmCPU], CV.FarmCPU)
                 }
             }else{
-                CV.FarmCPU <- ipca[,1:nPC.FarmCPU]
+                if(!is.null(nPC.FarmCPU))   CV.FarmCPU <- ipca[,1:nPC.FarmCPU]
             }
         }  
     }
@@ -330,6 +337,7 @@ function(phe, geno, map, K=NULL, nPC.GLM=NULL, nPC.MLM=NULL, nPC.FarmCPU=NULL,
             outpath=outpath, 
             memo = memo,
             dpi=dpi,
+            chr.den.col=col,
             threshold=threshold/m,
         )
 

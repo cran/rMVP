@@ -6,7 +6,7 @@
 Author: Haohao Zhang
 Build date: Sep 12, 2018}
 \usage{
-MVP.Data.Map(map, out = "mvp", cols = c(1, 2, 3), header = TRUE,
+MVP.Data.Map(map, out = "mvp", cols = 1:5, header = TRUE,
   sep = "\\t", verbose = TRUE)
 }
 \arguments{
@@ -32,8 +32,8 @@ Author: Haohao Zhang
 Build date: Sep 12, 2018
 }
 \examples{
-mapPath <- system.file("extdata", "07_other", "mvp.map", package = "rMVP")
+mapPath <- system.file("extdata", "05_mvp", "mvp.geno.map", package = "rMVP")
 
-MVP.Data.Map(mapPath, file.path(tempdir(), "rMVP.test"))
+MVP.Data.Map(mapPath, tempfile("outfile"))
 
 }
