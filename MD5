@@ -1,5 +1,5 @@
 074ce3e12207f4b77186581817654b30 *CHANGELOG
-b8dffc8cc438f0e2665cfcc6bc0e2508 *DESCRIPTION
+e58e4b4b1b822992ac9b08df4021f9bc *DESCRIPTION
 2e81391ee7eaa4d501eb06bbdfd55196 *NAMESPACE
 8bc36c1b2ec92cafc8e04c9b1765f885 *R/MVP.BRENT.Vg.Ve.R
 0cf01b4d0c22a42c2add0ccdb839ab09 *R/MVP.Data.r
@@ -13,8 +13,8 @@ e5ee054c1ad684ee2ecab66adfa1b89a *R/MVP.K.VanRaden.r
 99f7a5d710c357ae284d1ccd18491c4a *R/MVP.MLM.r
 8c1dd07636a24f86715b9cfbf964c055 *R/MVP.PCA.r
 b19447c211656737fe8ee0cd9ad5a21a *R/MVP.Report.r
-a2caff77ce37d27fe059654875c452d0 *R/MVP.Utility.r
-a5f5de1d11253a44fa8b3f57124a5628 *R/MVP.r
+bb1d1b26e151f0f908467d6c85d9c1ab *R/MVP.Utility.r
+887d465993cfebd465fc5ba434d6f6f1 *R/MVP.r
 744bce3bee47c4ff847c2ba088bdf289 *R/RcppExports.R
 30a17c4bdc4a4b5db8bfd57c6607f11f *R/zzz.R
 b78c944a0757ec38fb78561a0969a3d0 *data/pig60K.rda
@@ -22,7 +22,7 @@ b78c944a0757ec38fb78561a0969a3d0 *data/pig60K.rda
 9f57b847c9ec0f1cf400a4a52e1ed300 *inst/extdata/02_bfile/mvp.bed
 82849db8259f7c903b30f82b979a3b04 *inst/extdata/02_bfile/mvp.bim
 b4e0b4312d80c440b5ae890bfcab623d *inst/extdata/02_bfile/mvp.fam
-d0a7e4a76735ccafa8dc0d88bfeaf9d1 *inst/extdata/03_hapmap/mvp.hmp.txt
+59a1f18dd9eebe9bf6b62d605b06298d *inst/extdata/03_hapmap/mvp.hmp.txt
 69d55072b00330176b11dd699c40a6a5 *inst/extdata/04_numeric/mvp.map
 f4f1f98d35c84bec7f2b903f4020b115 *inst/extdata/04_numeric/mvp.num
 cf72194496b2c4f09ed40f8986bf8b9b *inst/extdata/05_mvp/mvp.geno.bin
@@ -65,7 +65,7 @@ bd24335137aca2fa02ce22438d6aebb4 *man/MVP.Report.Rd
 61059660eb073d93e00e8ee054237071 *src/Makevars
 61059660eb073d93e00e8ee054237071 *src/Makevars.win
 477a4d443d71a1982fe9fa69a2ae0a13 *src/RcppExports.cpp
-6d2cc6902d14252050539817fb4efecb *src/data_converter.cpp
+e270130369250a63cb4bee3adc56ad16 *src/data_converter.cpp
 ec9842bab54fde2645033a0f148b1d23 *src/fit_diago.cpp
 1ac208a3f30b95eac751abce43b6f497 *src/impute.cpp
 c300519cf9d89f632a0d5431ba95723b *src/kinship.cpp
