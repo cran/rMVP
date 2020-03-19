@@ -2,8 +2,8 @@ Package: rMVP
 Type: Package
 Title: Memory-Efficient, Visualize-Enhanced, Parallel-Accelerated GWAS
         Tool
-Version: 0.99.17
-Date: 2019-10-14
+Version: 0.99.18
+Date: 2020-03-02
 Authors@R: c( person("Lilin", "Yin", role = "aut"), 
               person("Haohao", "Zhang", role = "aut"),
               person("Zhenshuang", "Tang", role = "aut"),
@@ -36,14 +36,14 @@ License: Apache License 2.0
 SystemRequirements: C++11
 URL: https://github.com/XiaoleiLiuBio/rMVP
 BugReports: https://github.com/XiaoleiLiuBio/rMVP/issues
-Imports: utils, stats, methods, graphics, grDevices, Rcpp
-Depends: R (>= 3.3), MASS, parallel, bigmemory
-LinkingTo: Rcpp, RcppArmadillo, RcppEigen, RcppProgress, BH, bigmemory
+Imports: utils, stats, methods, graphics, grDevices, MASS, Rcpp
+Depends: R (>= 3.3), bigmemory
+LinkingTo: Rcpp, RcppEigen, RcppProgress, BH, bigmemory
 NeedsCompilation: yes
 Suggests: knitr, testthat, rmarkdown
 RoxygenNote: 6.1.1
 Maintainer: Xiaolei Liu <xiaoleiliu@mail.hzau.edu.cn>
-Packaged: 2019-10-14 06:27:58 UTC; hyacz
+Packaged: 2020-03-15 08:46:25 UTC; hyacz
 Author: Lilin Yin [aut],
   Haohao Zhang [aut],
   Zhenshuang Tang [aut],
@@ -60,4 +60,4 @@ Author: Lilin Yin [aut],
   Xiang Zhou [ctb],
   Xiaolei Liu [cre, aut, cph]
 Repository: CRAN
-Date/Publication: 2019-10-18 13:10:02 UTC
+Date/Publication: 2020-03-19 18:00:02 UTC

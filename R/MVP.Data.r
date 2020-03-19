@@ -520,12 +520,12 @@ MVP.Data.MVP2Bfile <- function(bigmat, map, pheno=NULL, out='mvp.plink', verbose
     } else if (ncol(pheno) == 1) {
         ind <- pheno[, 1]
         pheno <- rep(-9, ncol(bigmat))
-    } else if (ncol(pheno) >= 2) {
-        ind <- pheno[, 1]
-        pheno <- pheno[, 2]
+    } else {
         if (ncol(pheno) > 2) { 
             message("Only the first phenotype is written to the fam file, and the remaining ", ncol(pheno) - 1, " phenotypes are ignored.")
         }
+        ind <- pheno[, 1]
+        pheno <- pheno[, 2]
     }
     
     fam <- cbind(ind, ind, 0, 0, 0, pheno)
@@ -659,7 +659,7 @@ MVP.Data.Map <- function(map, out='mvp', cols=1:5, header=TRUE, sep='\t', verbos
     colnames(map) <- c("SNP", "CHROM", "POS", "REF", "ALT")
     if (length(unique(map[, 1])) != nrow(map)) {
         warning("WARNING: SNP is not unique and has been automatically renamed.")
-        map[, 1] <- apply(map[, c(2, 3)], 1, paste, collapse = "-")
+        map[, 1] <- paste(map[, 2], map[, 3], sep = "-")
     }
     allels <- map[, 4:5]
     allels[allels == 0] <- '.'
