@@ -1,5 +1,5 @@
-#include <Rcpp.h>
-#include <omp.h>
+#include <RcppArmadillo.h>
+#include "mvp_omp.h"
 #include <iostream>
 #include <bigmemory/BigMatrix.h>
 #include <bigmemory/MatrixAccessor.hpp>
@@ -8,12 +8,14 @@
 #include "progress_bar.hpp"
 
 // [[Rcpp::plugins(cpp11)]]
-// [[Rcpp::depends(Rcpp)]]
+// [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::depends(bigmemory, BH)]]
 // [[Rcpp::depends(RcppProgress)]]
 
 using namespace std;
 using namespace Rcpp;
+using namespace arma;
+
 
 class MinimalProgressBar: public ProgressBar{
 	public:
@@ -41,20 +43,16 @@ class MinimalProgressBar: public ProgressBar{
 
 
 template <typename T>
-NumericVector BigRowMean(XPtr<BigMatrix> pMat, int threads = 0){
+arma::vec BigRowMean(XPtr<BigMatrix> pMat, int threads = 0){
 
-    if (threads == 0) {
-        omp_set_num_threads(omp_get_num_procs());
-    }else if(threads > 0) {
-        omp_set_num_threads(threads);
-    }
+    omp_setup(threads);
 
 	MatrixAccessor<T> bigm = MatrixAccessor<T>(*pMat);
 
 	int ind = pMat->ncol();
 	int j, k, m = pMat->nrow();
 	double p1 = 0.0;
-	NumericVector mean(m);
+	arma::vec mean(m);
 
 	#pragma omp parallel for private(p1, k)
 	for (j = 0; j < m; j++){
@@ -69,7 +67,7 @@ NumericVector BigRowMean(XPtr<BigMatrix> pMat, int threads = 0){
 }
 
 
-NumericVector BigRowMean(SEXP pBigMat, int threads = 0){
+arma::vec BigRowMean(SEXP pBigMat, int threads = 0){
 	
 	XPtr<BigMatrix> xpMat(pBigMat);
 
@@ -89,13 +87,9 @@ NumericVector BigRowMean(SEXP pBigMat, int threads = 0){
 
 
 template <typename T>
-NumericMatrix kin_cal(XPtr<BigMatrix> pMat, int threads = 0){
+SEXP kin_cal(XPtr<BigMatrix> pMat, int threads = 0){
 
-    if (threads == 0) {
-        omp_set_num_threads(omp_get_num_procs());
-    }else if(threads > 0) {
-        omp_set_num_threads(threads);
-    }
+    omp_setup(threads);
 
 	MatrixAccessor<T> bigm = MatrixAccessor<T>(*pMat);
 
@@ -105,10 +99,10 @@ NumericMatrix kin_cal(XPtr<BigMatrix> pMat, int threads = 0){
 	double p12 = 0.0;
 	MinimalProgressBar pb;
 
-	NumericVector Mean = BigRowMean(pMat, threads);
-	double SUM = sum((0.5 * Mean) * (1 - 0.5 * Mean));
+	arma::vec Mean = BigRowMean(pMat, threads);
+	double SUM = arma::dot((0.5 * Mean), (1 - 0.5 * Mean));
 
-	NumericMatrix kin(n, n);
+	arma::mat kin(n, n);
 
 	Progress p(n, true, pb);
 
@@ -139,12 +133,12 @@ NumericMatrix kin_cal(XPtr<BigMatrix> pMat, int threads = 0){
 		// }
 	// }
 	
-	return kin;
+	return Rcpp::wrap(kin);
 }
 
 
 // [[Rcpp::export]]
-NumericMatrix kin_cal(SEXP pBigMat, int threads = 0){
+SEXP kin_cal(SEXP pBigMat, int threads = 0){
 
 	XPtr<BigMatrix> xpMat(pBigMat);
 

@@ -12,14 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#ifndef MVP_OMP_H_
+#define MVP_OMP_H_
+
+#if defined(_OPENMP)
 #include <omp.h>
-#include <Rcpp.h>
-
-// [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::plugins(openmp)]]
+#else
+#endif
 
-static int omp_setup(int threads, bool verbose);
-static inline int omp_setup(int threads=0, bool verbose=true) {
+#include <Rcpp.h>
+// [[Rcpp::plugins(cpp11)]]
+
+static int omp_setup(int threads);
+static inline int omp_setup(int threads=0) {
     int t = 1;
 #ifdef _OPENMP
     if (threads == 0) {
@@ -29,12 +35,9 @@ static inline int omp_setup(int threads=0, bool verbose=true) {
         t = threads > 0 ? threads : 1;
     }
     omp_set_num_threads(t);
-    
-    if (verbose)
-        Rcpp::Rcerr << "Number of threads: " << omp_get_max_threads() << std::endl;
 #else
-    if (verbose)
-        Rcpp::Rcerr << "Number of threads: 1 (No OpenMP detected)" << std::endl;
 #endif
     return t;
 }
+
+#endif

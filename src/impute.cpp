@@ -13,7 +13,7 @@
 // limitations under the License.
 
 
-#include "utility.h"
+#include "mvp_omp.h"
 #include <progress.hpp>
 #include <bigmemory/MatrixAccessor.hpp>
 
@@ -26,7 +26,7 @@ using namespace Rcpp;
 
 template <typename T>
 void impute_marker(XPtr<BigMatrix> pMat, int threads=0, bool verbose=true) {
-    omp_setup(threads, verbose);
+    omp_setup(threads);
     Progress progress(pMat->nrow(), verbose);
     
     MatrixAccessor<T> mat = MatrixAccessor<T>(*pMat);
@@ -80,9 +80,12 @@ void impute_marker(SEXP pBigMat, int threads=0, bool verbose=true) {
 
 template <typename T>
 bool hasNA(XPtr<BigMatrix> pMat, double NA_C) {
+    size_t m = pMat->nrow();
+    size_t n = pMat->ncol();
+
     MatrixAccessor<T> mat = MatrixAccessor<T>(*pMat);
-    for (size_t j = 0; j < pMat->ncol(); j++) {
-        for (size_t i = 0; i < pMat->nrow(); i++) {
+    for (size_t j = 0; j < n; j++) {
+        for (size_t i = 0; i < m; i++) {
             if (mat[j][i] == NA_C) {
                 return true;
             }
