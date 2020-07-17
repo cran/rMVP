@@ -25,8 +25,8 @@ hapmap_parser_map <- function(hmp_file, out) {
     .Call(`_rMVP_hapmap_parser_map`, hmp_file, out)
 }
 
-hapmap_parser_genotype <- function(hmp_file, pBigMat, maxLine, threads = 0L, verbose = TRUE) {
-    invisible(.Call(`_rMVP_hapmap_parser_genotype`, hmp_file, pBigMat, maxLine, threads, verbose))
+hapmap_parser_genotype <- function(hmp_file, Major, pBigMat, maxLine, threads = 0L, verbose = TRUE) {
+    invisible(.Call(`_rMVP_hapmap_parser_genotype`, hmp_file, Major, pBigMat, maxLine, threads, verbose))
 }
 
 numeric_scan <- function(num_file) {
@@ -57,11 +57,15 @@ impute_marker <- function(pBigMat, threads = 0L, verbose = TRUE) {
     invisible(.Call(`_rMVP_impute_marker`, pBigMat, threads, verbose))
 }
 
-hasNA <- function(pBigMat) {
-    .Call(`_rMVP_hasNA`, pBigMat)
+hasNA <- function(pBigMat, threads = 0L) {
+    .Call(`_rMVP_hasNA`, pBigMat, threads)
 }
 
-kin_cal <- function(pBigMat, threads = 0L) {
-    .Call(`_rMVP_kin_cal`, pBigMat, threads)
+kin_cal_m <- function(pBigMat, threads = 0L, verbose = TRUE) {
+    .Call(`_rMVP_kin_cal_m`, pBigMat, threads, verbose)
+}
+
+kin_cal_s <- function(pBigMat, threads = 0L, mkl = FALSE, verbose = TRUE) {
+    .Call(`_rMVP_kin_cal_s`, pBigMat, threads, mkl, verbose)
 }
 

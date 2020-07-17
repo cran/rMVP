@@ -20,14 +20,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // glm_c
-SEXP glm_c(const arma::vec y, const arma::mat X, const arma::mat iXX, SEXP pBigMat, const bool verbose, const int threads);
+SEXP glm_c(const arma::vec& y, const arma::mat& X, const arma::mat& iXX, SEXP pBigMat, const bool verbose, const int threads);
 RcppExport SEXP _rMVP_glm_c(SEXP ySEXP, SEXP XSEXP, SEXP iXXSEXP, SEXP pBigMatSEXP, SEXP verboseSEXP, SEXP threadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::vec >::type y(ySEXP);
-    Rcpp::traits::input_parameter< const arma::mat >::type X(XSEXP);
-    Rcpp::traits::input_parameter< const arma::mat >::type iXX(iXXSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type iXX(iXXSEXP);
     Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
     Rcpp::traits::input_parameter< const bool >::type verbose(verboseSEXP);
     Rcpp::traits::input_parameter< const int >::type threads(threadsSEXP);
@@ -36,14 +36,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // mlm_c
-SEXP mlm_c(const arma::vec y, const arma::mat X, const arma::mat U, const double vgs, SEXP pBigMat, const bool verbose, const int threads);
+SEXP mlm_c(const arma::vec& y, const arma::mat& X, const arma::mat& U, const double vgs, SEXP pBigMat, const bool verbose, const int threads);
 RcppExport SEXP _rMVP_mlm_c(SEXP ySEXP, SEXP XSEXP, SEXP USEXP, SEXP vgsSEXP, SEXP pBigMatSEXP, SEXP verboseSEXP, SEXP threadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::vec >::type y(ySEXP);
-    Rcpp::traits::input_parameter< const arma::mat >::type X(XSEXP);
-    Rcpp::traits::input_parameter< const arma::mat >::type U(USEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type U(USEXP);
     Rcpp::traits::input_parameter< const double >::type vgs(vgsSEXP);
     Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
     Rcpp::traits::input_parameter< const bool >::type verbose(verboseSEXP);
@@ -91,16 +91,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // hapmap_parser_genotype
-void hapmap_parser_genotype(std::string hmp_file, SEXP pBigMat, long maxLine, int threads, bool verbose);
-RcppExport SEXP _rMVP_hapmap_parser_genotype(SEXP hmp_fileSEXP, SEXP pBigMatSEXP, SEXP maxLineSEXP, SEXP threadsSEXP, SEXP verboseSEXP) {
+void hapmap_parser_genotype(std::string hmp_file, std::vector<std::string> Major, SEXP pBigMat, long maxLine, int threads, bool verbose);
+RcppExport SEXP _rMVP_hapmap_parser_genotype(SEXP hmp_fileSEXP, SEXP MajorSEXP, SEXP pBigMatSEXP, SEXP maxLineSEXP, SEXP threadsSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type hmp_file(hmp_fileSEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string> >::type Major(MajorSEXP);
     Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
     Rcpp::traits::input_parameter< long >::type maxLine(maxLineSEXP);
     Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    hapmap_parser_genotype(hmp_file, pBigMat, maxLine, threads, verbose);
+    hapmap_parser_genotype(hmp_file, Major, pBigMat, maxLine, threads, verbose);
     return R_NilValue;
 END_RCPP
 }
@@ -196,25 +197,41 @@ BEGIN_RCPP
 END_RCPP
 }
 // hasNA
-bool hasNA(SEXP pBigMat);
-RcppExport SEXP _rMVP_hasNA(SEXP pBigMatSEXP) {
+bool hasNA(SEXP pBigMat, const int threads);
+RcppExport SEXP _rMVP_hasNA(SEXP pBigMatSEXP, SEXP threadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
-    rcpp_result_gen = Rcpp::wrap(hasNA(pBigMat));
+    Rcpp::traits::input_parameter< const int >::type threads(threadsSEXP);
+    rcpp_result_gen = Rcpp::wrap(hasNA(pBigMat, threads));
     return rcpp_result_gen;
 END_RCPP
 }
-// kin_cal
-SEXP kin_cal(SEXP pBigMat, int threads);
-RcppExport SEXP _rMVP_kin_cal(SEXP pBigMatSEXP, SEXP threadsSEXP) {
+// kin_cal_m
+SEXP kin_cal_m(SEXP pBigMat, int threads, bool verbose);
+RcppExport SEXP _rMVP_kin_cal_m(SEXP pBigMatSEXP, SEXP threadsSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
     Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
-    rcpp_result_gen = Rcpp::wrap(kin_cal(pBigMat, threads));
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(kin_cal_m(pBigMat, threads, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
+// kin_cal_s
+SEXP kin_cal_s(SEXP pBigMat, int threads, bool mkl, bool verbose);
+RcppExport SEXP _rMVP_kin_cal_s(SEXP pBigMatSEXP, SEXP threadsSEXP, SEXP mklSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
+    Rcpp::traits::input_parameter< bool >::type mkl(mklSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(kin_cal_s(pBigMat, threads, mkl, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -226,7 +243,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rMVP_vcf_parser_map", (DL_FUNC) &_rMVP_vcf_parser_map, 2},
     {"_rMVP_vcf_parser_genotype", (DL_FUNC) &_rMVP_vcf_parser_genotype, 5},
     {"_rMVP_hapmap_parser_map", (DL_FUNC) &_rMVP_hapmap_parser_map, 2},
-    {"_rMVP_hapmap_parser_genotype", (DL_FUNC) &_rMVP_hapmap_parser_genotype, 5},
+    {"_rMVP_hapmap_parser_genotype", (DL_FUNC) &_rMVP_hapmap_parser_genotype, 6},
     {"_rMVP_numeric_scan", (DL_FUNC) &_rMVP_numeric_scan, 1},
     {"_rMVP_write_bfile", (DL_FUNC) &_rMVP_write_bfile, 4},
     {"_rMVP_read_bfile", (DL_FUNC) &_rMVP_read_bfile, 5},
@@ -234,8 +251,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rMVP_crossprodcpp", (DL_FUNC) &_rMVP_crossprodcpp, 1},
     {"_rMVP_geninv", (DL_FUNC) &_rMVP_geninv, 1},
     {"_rMVP_impute_marker", (DL_FUNC) &_rMVP_impute_marker, 3},
-    {"_rMVP_hasNA", (DL_FUNC) &_rMVP_hasNA, 1},
-    {"_rMVP_kin_cal", (DL_FUNC) &_rMVP_kin_cal, 2},
+    {"_rMVP_hasNA", (DL_FUNC) &_rMVP_hasNA, 2},
+    {"_rMVP_kin_cal_m", (DL_FUNC) &_rMVP_kin_cal_m, 3},
+    {"_rMVP_kin_cal_s", (DL_FUNC) &_rMVP_kin_cal_s, 4},
     {NULL, NULL, 0}
 };
 

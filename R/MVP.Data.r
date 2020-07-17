@@ -343,7 +343,8 @@ MVP.Data.Hapmap2MVP <- function(hmp_file, out='mvp', maxLine = 1e4, type.geno='c
     
     # parser map
     logging.log("Reading file...\n", verbose = verbose)
-    scan <- hapmap_parser_map(hmp_file, out)
+    logging.log("Writing map into file\n", verbose = verbose)
+    scan <- hapmap_parser_map(hmp_file[1], out)
     m <- scan$m
     n <- scan$n
     logging.log(paste0("inds: ", n, "\tmarkers:", m, '\n'), verbose = verbose)
@@ -358,7 +359,7 @@ MVP.Data.Hapmap2MVP <- function(hmp_file, out='mvp', maxLine = 1e4, type.geno='c
         descriptorfile = descriptorfile,
         dimnames = c(NULL, NULL)
     )
-    hapmap_parser_genotype(hmp_file = hmp_file, pBigMat = bigmat@address, maxLine = maxLine, threads = threads, verbose = verbose)
+    hapmap_parser_genotype(hmp_file = hmp_file, Major = scan$Major, pBigMat = bigmat@address, maxLine = maxLine, threads = threads, verbose = verbose)
     t2 <- as.numeric(Sys.time())
     logging.log("Preparation for GENOTYPE data is done within", format_time(t2 - t1), "\n", verbose = verbose)
     return(invisible(c(m, n)))
@@ -717,10 +718,6 @@ MVP.Data.PC <- function(
     } else if (filePC == TRUE) {
         if(is.null(K)){
             geno <- attach.big.matrix(paste0(mvp_prefix, ".geno.desc"))
-            if (hasNA(geno@address)) {
-                message("NA in genotype, Calculate PCA has been skipped.")
-                return()
-            }
             myPC <- MVP.PCA(M=geno, pcs.keep = pcs.keep, priority=priority, cpu=cpus)
         }else{
             myPC <- MVP.PCA(K=K, pcs.keep = pcs.keep, priority=priority, cpu=cpus)
@@ -785,10 +782,6 @@ MVP.Data.Kin <- function(
         myKin <- read.big.matrix(fileKin, header = FALSE, type = 'double', sep = sep)
     } else if (fileKin == TRUE) {
         geno <- attach.big.matrix(paste0(mvp_prefix, ".geno.desc"))
-        if (hasNA(geno@address)) {
-            message("NA in genotype, Calculate Kinship has been skipped.")
-            return()
-        }
         logging.log("Calculate KINSHIP using Vanraden method...", "\n", verbose = verbose)
         myKin <- MVP.K.VanRaden(geno, priority = priority, cpu = cpus)
     } else {

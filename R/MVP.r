@@ -98,6 +98,11 @@ function(phe, geno, map, K=NULL, nPC.GLM=NULL, nPC.MLM=NULL, nPC.FarmCPU=NULL,
     } else if (file.output == FALSE) {
       file.output <- c()
     }
+
+    for(mt in method){
+        if(!mt %in% c("GLM", "MLM", "FarmCPU"))
+            stop("Unknow method: ", mt)
+    }
     
     # Set output path of log file 
     logging.outpath <- NULL
@@ -113,8 +118,10 @@ function(phe, geno, map, K=NULL, nPC.GLM=NULL, nPC.MLM=NULL, nPC.FarmCPU=NULL,
     }
     vc.method <- match.arg(vc.method)
     if (nrow(phe) != ncol(geno)) stop("The number of individuals in phenotype and genotype doesn't match!")
+    if (nrow(geno) != nrow(map)) stop("The number of markers in genotype and map doesn't match!")
     if (!is.big.matrix(geno))    stop("genotype should be in 'big.matrix' format.")
-
+    if(hasNA(geno@address))   stop("NA is not allowed in genotype, use 'MVP.Data.impute' to impute.")
+    
     #list -> matrix
     map <- as.data.frame(map)
     for(i in 1 : ncol(map)){
@@ -144,7 +151,8 @@ function(phe, geno, map, K=NULL, nPC.GLM=NULL, nPC.MLM=NULL, nPC.FarmCPU=NULL,
     n <- ncol(geno)
     logging.log(paste("Input data has", n, "individuals,", m, "markers"), "\n", verbose = verbose)
     logging.log("Analyzed trait:", colnames(phe)[2], "\n", verbose = verbose)
-    
+    logging.log("Number of threads used:", ncpus, "\n", verbose = verbose)
+
     #remove samples with missing phenotype
     seqTaxa = which(!is.na(phe[,2]))
     if (length(na.index) != 0) seqTaxa <- intersect(seqTaxa, c(1:n)[-na.index])
@@ -192,7 +200,7 @@ function(phe, geno, map, K=NULL, nPC.GLM=NULL, nPC.MLM=NULL, nPC.FarmCPU=NULL,
               verbose = verbose
             )
         }
-        logging.log("Eigen Decomposition on Genomic Relationship Matrix", "\n", verbose = verbose)
+        logging.log("Eigen Decomposition on GRM", "\n", verbose = verbose)
         eigenK <- eigen(K, symmetric = TRUE)
         if (!is.null(nPC)) {
             ipca <- eigenK$vectors[, 1:nPC]
@@ -261,14 +269,13 @@ function(phe, geno, map, K=NULL, nPC.GLM=NULL, nPC.MLM=NULL, nPC.FarmCPU=NULL,
             }
         }
     }
-    logging.log("Number of threads used:", ncpus, "\n", verbose = verbose)
 
     #GWAS
     logging.log("-------------------------GWAS Start-------------------------", "\n", verbose = verbose)
     if (glm.run) {
         logging.log("General Linear Model (GLM) Start...", "\n", verbose = verbose)
         glm.results <- MVP.GLM(phe=phe, geno=geno, CV=CV.GLM, cpu=ncpus, verbose = verbose);gc()
-        colnames(glm.results) <- c("effect", "se", paste(colnames(phe)[2],"GLM",sep="."))
+        colnames(glm.results) <- c("Effect", "SE", paste(colnames(phe)[2],"GLM",sep="."))
         z = glm.results[, 1]/glm.results[, 2]
         lambda = median(z^2, na.rm=TRUE)/qchisq(1/2, df = 1,lower.tail=FALSE)
         logging.log("Genomic inflation factor (lambda):", round(lambda, 4), "\n", verbose = verbose)
@@ -283,7 +290,7 @@ function(phe, geno, map, K=NULL, nPC.GLM=NULL, nPC.MLM=NULL, nPC.FarmCPU=NULL,
     if (mlm.run) {
         logging.log("Mixed Linear Model (MLM) Start...", "\n", verbose = verbose)
         mlm.results <- MVP.MLM(phe=phe, geno=geno, K=K, eigenK=eigenK, CV=CV.MLM, cpu=ncpus, vc.method=vc.method, verbose = verbose);gc()
-        colnames(mlm.results) <- c("effect", "se", paste(colnames(phe)[2],"MLM",sep="."))
+        colnames(mlm.results) <- c("Effect", "SE", paste(colnames(phe)[2],"MLM",sep="."))
         z = mlm.results[, 1]/mlm.results[, 2]
         lambda = median(z^2, na.rm=TRUE)/qchisq(1/2, df = 1,lower.tail=FALSE)
         logging.log("Genomic inflation factor (lambda):", round(lambda, 4), "\n", verbose = verbose)
@@ -298,7 +305,7 @@ function(phe, geno, map, K=NULL, nPC.GLM=NULL, nPC.MLM=NULL, nPC.FarmCPU=NULL,
     if (farmcpu.run) {
         logging.log("FarmCPU Start...", "\n", verbose = verbose)
         farmcpu.results <- MVP.FarmCPU(phe=phe, geno=geno, map=map[,1:3], CV=CV.FarmCPU, ncpus=ncpus, memo="MVP.FarmCPU", p.threshold=p.threshold, QTN.threshold=QTN.threshold, method.bin=method.bin, bin.size=bin.size, bin.selection=bin.selection, maxLoop=maxLoop, verbose = verbose)
-        colnames(farmcpu.results) <- c("effect", "se", paste(colnames(phe)[2],"FarmCPU",sep="."))
+        colnames(farmcpu.results) <- c("Effect", "SE", paste(colnames(phe)[2],"FarmCPU",sep="."))
         z = farmcpu.results[, 1]/farmcpu.results[, 2]
         lambda = median(z^2, na.rm=TRUE)/qchisq(1/2, df = 1,lower.tail=FALSE)
         logging.log("Genomic inflation factor (lambda):", round(lambda, 4), "\n", verbose = verbose)
@@ -360,7 +367,7 @@ function(phe, geno, map, K=NULL, nPC.GLM=NULL, nPC.MLM=NULL, nPC.FarmCPU=NULL,
         }
     }
     if ("plot" %in% file.output) {
-        logging.log("---------------------Visualization Start-------------------", "\n", verbose = verbose)
+        logging.log("---------------------Visualization Start--------------------", "\n", verbose = verbose)
         logging.log("Phenotype distribution Plotting", "\n", verbose = verbose)
         MVP.Hist(memo=memo, outpath=outpath, file.output=TRUE, phe=phe, file.type=file.type, col=col, dpi=dpi)
         #plot3D <- !is(try(library("rgl"),silent=TRUE), "try-error")
