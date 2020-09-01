@@ -1,5 +1,5 @@
 074ce3e12207f4b77186581817654b30 *CHANGELOG
-9b7ef04051bc9cef0d64c17261ee3061 *DESCRIPTION
+97739f4db26d08958149b9efe75f0dab *DESCRIPTION
 030b722753f7852d08ceed94ef40b24a *NAMESPACE
 8bc36c1b2ec92cafc8e04c9b1765f885 *R/MVP.BRENT.Vg.Ve.R
 3979120e9103fc94da2dbabf716ef203 *R/MVP.Data.r
@@ -68,7 +68,7 @@ a1e089fd2deb48b7dbe0530333c5a3da *src/Makevars
 a1e089fd2deb48b7dbe0530333c5a3da *src/Makevars.win
 4d815784b463591333bed2a837c367ef *src/RcppExports.cpp
 f4b581d5da0378d9eb5e193811eea491 *src/assoc.cpp
-1ce8c559ff25cc3aa775d2facdf59d42 *src/data_converter.cpp
+4235ecc35c8f2ab29fb9ce476e5ee975 *src/data_converter.cpp
 a41c01bfb4d18867622522530d82dc76 *src/fit_diago.cpp
 c4a8461d4b63e1f8da65e1bb01f3eeef *src/impute.cpp
 a355648d384c0067ee472c868b6f61d3 *src/kinship.cpp
