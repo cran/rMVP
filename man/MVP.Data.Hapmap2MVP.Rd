@@ -6,8 +6,14 @@
 Author: Haohao Zhang
 Build date: Sep 12, 2018}
 \usage{
-MVP.Data.Hapmap2MVP(hmp_file, out = "mvp", maxLine = 10000,
-  type.geno = "char", threads = 1, verbose = TRUE)
+MVP.Data.Hapmap2MVP(
+  hmp_file,
+  out = "mvp",
+  maxLine = 10000,
+  type.geno = "char",
+  threads = 1,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{hmp_file}{Genotype in Hapmap format}
@@ -35,8 +41,10 @@ Author: Haohao Zhang
 Build date: Sep 12, 2018
 }
 \examples{
+\donttest{
 hapmapPath <- system.file("extdata", "03_hapmap", "mvp.hmp.txt", package = "rMVP")
 
-MVP.Data.Hapmap2MVP(hapmapPath, tempfile("outfile"))
+MVP.Data.Hapmap2MVP(hapmapPath, tempfile("outfile"), threads=1)
+}
 
 }

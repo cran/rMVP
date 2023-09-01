@@ -1,4 +1,3 @@
-#define ARMA_64BIT_WORD 1
 #include <RcppArmadillo.h>
 #include "mvp_omp.h"
 #include <iostream>
@@ -8,7 +7,6 @@
 #include <progress.hpp>
 #include "progress_bar.hpp"
 
-// [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::depends(bigmemory, BH)]]
 // [[Rcpp::depends(RcppProgress)]]

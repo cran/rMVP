@@ -33,9 +33,9 @@
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' phePath <- system.file("extdata", "07_other", "mvp.phe", package = "rMVP")
 #' phenotype <- read.table(phePath, header=TRUE)
-#' idx <- !is.na(phenotype[, 2])
 #' idx <- !is.na(phenotype[, 2])
 #' phenotype <- phenotype[idx, ]
 #' print(dim(phenotype))
@@ -43,10 +43,11 @@
 #' genotype <- attach.big.matrix(genoPath)
 #' genotype <- deepcopy(genotype, cols=idx)
 #' print(dim(genotype))
-#' K <- MVP.K.VanRaden(genotype)
+#' K <- MVP.K.VanRaden(genotype, cpu=1)
 #' 
-#' mlm <- MVP.MLM(phe=phenotype, geno=genotype, K=K)
+#' mlm <- MVP.MLM(phe=phenotype, geno=genotype, K=K, cpu=1)
 #' str(mlm)
+#' }
 #' 
 
 MVP.MLM <-

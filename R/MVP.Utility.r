@@ -198,12 +198,7 @@ print_accomplished <- function(width = 60, verbose = TRUE) {
 #' welcome <- "Welcome to MVP"
 #' title   <- "A Memory-efficient, Visualization-enhanced, and Parallel-accelerated Tool For GWAS"
 #' authors <- "Authors: Lilin Yin, Haohao Zhang, and Xiaolei Liu"
-#' contact <- "Contact: xiaoleiliu@mail.hzau.edu.cn"
-#' logo_s  <- c(" __  __  __   __  ___",
-#'              "|  \/  | \ \ / / | _ \",
-#'              "| |\/| |  \ V /  |  _/",
-#'              "|_|  |_|   \_/   |_|")
-#' print_info(welcome = welcome, title = title, logo = logo_s, authors = authors, contact = contact, linechar = '=', width = width)
+#' print_info(welcome = welcome, title = title, logo = NULL, authors = authors, contact = NULL, linechar = '=', width = width)
 print_info <- function(welcome=NULL, title=NULL, short_title=NULL, logo=NULL, version=NULL, authors=NULL, contact=NULL, linechar = '=', width=NULL, verbose=TRUE) {
     msg <- c()
     # width
@@ -390,7 +385,7 @@ remove_bigmatrix <- function(x, desc_suffix=".geno.desc", bin_suffix=".geno.bin"
     
     remove_var <- function(binfile, envir) {
         for (v in ls(envir = envir)) {
-            if (class(get(v, envir = envir)) == "big.matrix") {
+            if (is(get(v, envir = envir), "big.matrix")) {
                 desc <- describe(get(v, envir = envir))@description
                 if (desc$filename == binfile) {
                     rm(list = v, envir = envir)

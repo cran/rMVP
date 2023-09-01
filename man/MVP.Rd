@@ -4,18 +4,40 @@
 \alias{MVP}
 \title{MVP, Memory-efficient, Visualization-enhanced, Parallel-accelerated}
 \usage{
-MVP(phe, geno, map, K = NULL, nPC.GLM = NULL, nPC.MLM = NULL,
-  nPC.FarmCPU = NULL, CV.GLM = NULL, CV.MLM = NULL,
-  CV.FarmCPU = NULL, REML = NULL, priority = "speed",
-  ncpus = detectCores(logical = FALSE), vc.method = c("BRENT", "EMMA",
-  "HE"), method = c("GLM", "MLM", "FarmCPU"), p.threshold = NA,
-  QTN.threshold = 0.01, method.bin = "static", bin.size = c(5e+05,
-  5e+06, 5e+07), bin.selection = seq(10, 100, 10), maxLoop = 10,
-  permutation.threshold = FALSE, permutation.rep = 100, memo = NULL,
-  outpath = getwd(), col = c("#4197d8", "#f8c120", "#413496",
-  "#495226", "#d60b6f", "#e66519", "#d581b7", "#83d3ad", "#7c162c",
-  "#26755d"), file.output = TRUE, file.type = "jpg", dpi = 300,
-  threshold = 0.05, verbose = TRUE)
+MVP(
+  phe,
+  geno,
+  map,
+  K = NULL,
+  nPC.GLM = NULL,
+  nPC.MLM = NULL,
+  nPC.FarmCPU = NULL,
+  CV.GLM = NULL,
+  CV.MLM = NULL,
+  CV.FarmCPU = NULL,
+  REML = NULL,
+  priority = "speed",
+  ncpus = detectCores(logical = FALSE),
+  vc.method = c("BRENT", "EMMA", "HE"),
+  method = c("GLM", "MLM", "FarmCPU"),
+  p.threshold = NA,
+  QTN.threshold = 0.01,
+  method.bin = "static",
+  bin.size = c(5e+05, 5e+06, 5e+07),
+  bin.selection = seq(10, 100, 10),
+  maxLoop = 10,
+  permutation.threshold = FALSE,
+  permutation.rep = 100,
+  memo = NULL,
+  outpath = getwd(),
+  col = c("#4197d8", "#f8c120", "#413496", "#495226", "#d60b6f", "#e66519", "#d581b7",
+    "#83d3ad", "#7c162c", "#26755d"),
+  file.output = TRUE,
+  file.type = "jpg",
+  dpi = 300,
+  threshold = 0.05,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{phe}{phenotype, n * 2 matrix, n is sample size}
@@ -98,6 +120,7 @@ Build date: Aug 30, 2017
 Last update: Dec 14, 2018
 }
 \examples{
+\donttest{
 phePath <- system.file("extdata", "07_other", "mvp.phe", package = "rMVP")
 phenotype <- read.table(phePath, header=TRUE)
 print(dim(phenotype))
@@ -114,6 +137,7 @@ mvp <- MVP(phe=phenotype, geno=genotype, map=map, maxLoop=3,
 str(mvp)
 
 options(opts)
+}
 }
 \author{
 Lilin Yin, Haohao Zhang, and Xiaolei Liu

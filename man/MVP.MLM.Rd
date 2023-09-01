@@ -4,8 +4,17 @@
 \alias{MVP.MLM}
 \title{To perform GWAS with GLM and MLM model and get the P value of SNPs}
 \usage{
-MVP.MLM(phe, geno, K = NULL, eigenK = NULL, CV = NULL, REML = NULL,
-  cpu = 1, vc.method = c("BRENT", "EMMA", "HE"), verbose = TRUE)
+MVP.MLM(
+  phe,
+  geno,
+  K = NULL,
+  eigenK = NULL,
+  CV = NULL,
+  REML = NULL,
+  cpu = 1,
+  vc.method = c("BRENT", "EMMA", "HE"),
+  verbose = TRUE
+)
 }
 \arguments{
 \item{phe}{phenotype, n * 2 matrix}
@@ -34,9 +43,9 @@ Build date: Aug 30, 2016
 Last update: Aug 30, 2016
 }
 \examples{
+\donttest{
 phePath <- system.file("extdata", "07_other", "mvp.phe", package = "rMVP")
 phenotype <- read.table(phePath, header=TRUE)
-idx <- !is.na(phenotype[, 2])
 idx <- !is.na(phenotype[, 2])
 phenotype <- phenotype[idx, ]
 print(dim(phenotype))
@@ -44,10 +53,11 @@ genoPath <- system.file("extdata", "06_mvp-impute", "mvp.imp.geno.desc", package
 genotype <- attach.big.matrix(genoPath)
 genotype <- deepcopy(genotype, cols=idx)
 print(dim(genotype))
-K <- MVP.K.VanRaden(genotype)
+K <- MVP.K.VanRaden(genotype, cpu=1)
 
-mlm <- MVP.MLM(phe=phenotype, geno=genotype, K=K)
+mlm <- MVP.MLM(phe=phenotype, geno=genotype, K=K, cpu=1)
 str(mlm)
+}
 
 }
 \author{

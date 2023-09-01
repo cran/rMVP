@@ -4,14 +4,29 @@
 \alias{MVP.FarmCPU}
 \title{Perform GWAS using FarmCPU method}
 \usage{
-MVP.FarmCPU(phe, geno, map, CV = NULL, P = NULL,
-  method.sub = "reward", method.sub.final = "reward",
-  method.bin = c("EMMA", "static", "FaST-LMM"), bin.size = c(5e+05,
-  5e+06, 5e+07), bin.selection = seq(10, 100, 10),
-  memo = "MVP.FarmCPU", Prior = NULL, ncpus = 2, maxLoop = 10,
-  threshold.output = 0.01, converge = 1, iteration.output = FALSE,
-  p.threshold = NA, QTN.threshold = 0.01, bound = NULL,
-  verbose = TRUE)
+MVP.FarmCPU(
+  phe,
+  geno,
+  map,
+  CV = NULL,
+  P = NULL,
+  method.sub = "reward",
+  method.sub.final = "reward",
+  method.bin = c("EMMA", "static", "FaST-LMM"),
+  bin.size = c(5e+05, 5e+06, 5e+07),
+  bin.selection = seq(10, 100, 10),
+  memo = "MVP.FarmCPU",
+  Prior = NULL,
+  ncpus = 2,
+  maxLoop = 10,
+  threshold.output = 0.01,
+  converge = 1,
+  iteration.output = FALSE,
+  p.threshold = NA,
+  QTN.threshold = 0.01,
+  bound = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{phe}{phenotype, n by t matrix, n is sample size, t is number of phenotypes}
@@ -65,6 +80,7 @@ Last update: May 25, 2017
 Requirement: Y, GD, and CV should have same taxa order. GD and GM should have the same order on SNPs
 }
 \examples{
+\donttest{
 phePath <- system.file("extdata", "07_other", "mvp.phe", package = "rMVP")
 phenotype <- read.table(phePath, header=TRUE)
 idx <- !is.na(phenotype[, 2])
@@ -79,6 +95,7 @@ map <- read.table(mapPath , head = TRUE)
 
 farmcpu <- MVP.FarmCPU(phe=phenotype,geno=genotype,map=map,maxLoop=2,method.bin="static")
 str(farmcpu)
+}
 
 }
 \author{

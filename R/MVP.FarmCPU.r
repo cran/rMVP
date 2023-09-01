@@ -45,6 +45,7 @@
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' phePath <- system.file("extdata", "07_other", "mvp.phe", package = "rMVP")
 #' phenotype <- read.table(phePath, header=TRUE)
 #' idx <- !is.na(phenotype[, 2])
@@ -59,6 +60,7 @@
 #' 
 #' farmcpu <- MVP.FarmCPU(phe=phenotype,geno=genotype,map=map,maxLoop=2,method.bin="static")
 #' str(farmcpu)
+#' }
 #' 
 `MVP.FarmCPU` <- function(phe, geno, map, CV=NULL, P=NULL, method.sub="reward", method.sub.final="reward", 
                           method.bin=c("EMMA", "static", "FaST-LMM"), bin.size=c(5e5,5e6,5e7), bin.selection=seq(10,100,10), 
@@ -281,7 +283,7 @@
     deltaExpEnd = 5
     snp.pool=snp.pool[,]
 
-    if(!is.null(snp.pool)&&var(snp.pool)==0){
+    if(!is.null(snp.pool)&&any(apply(snp.pool, 2, var)==0)){
         deltaExpStart = 100
         deltaExpEnd = deltaExpStart
     }
