@@ -12,10 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
-#include "mvp_omp.h"
-#include <progress.hpp>
-#include <bigmemory/MatrixAccessor.hpp>
+#include "rMVP.h"
 
 using namespace Rcpp;
 
@@ -26,7 +23,9 @@ using namespace Rcpp;
 template <typename T>
 void impute_marker(XPtr<BigMatrix> pMat, int threads=0, bool verbose=true) {
     omp_setup(threads);
-    Progress progress(pMat->nrow(), verbose);
+
+    MinimalProgressBar_perc pb;
+    Progress progress(pMat->nrow(), verbose, pb);
     
     MatrixAccessor<T> mat = MatrixAccessor<T>(*pMat);
     const size_t n = pMat->ncol();
@@ -86,7 +85,8 @@ bool hasNA(XPtr<BigMatrix> pMat, double NA_C, const int threads=0) {
     bool HasNA = false;
 
     MatrixAccessor<T> mat = MatrixAccessor<T>(*pMat);
-    #pragma omp parallel for schedule(dynamic) shared(HasNA)
+    
+    #pragma omp parallel for shared(HasNA)
     for (size_t j = 0; j < n; j++) {
         if(HasNA)   continue;
         for (size_t i = 0; i < m; i++) {

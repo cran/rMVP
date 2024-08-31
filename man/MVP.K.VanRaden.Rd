@@ -4,16 +4,27 @@
 \alias{MVP.K.VanRaden}
 \title{Calculate Kinship matrix by VanRaden method}
 \usage{
-MVP.K.VanRaden(M, priority = c("speed", "memory"), cpu = 1, verbose = TRUE)
+MVP.K.VanRaden(
+  M,
+  maxLine = 5000,
+  ind_idx = NULL,
+  cpu = 1,
+  verbose = TRUE,
+  checkNA = TRUE
+)
 }
 \arguments{
 \item{M}{Genotype, m * n, m is marker size, n is population size}
 
-\item{priority}{speed or memory}
+\item{maxLine}{the number of markers handled at a time, smaller value would reduce the memory cost}
+
+\item{ind_idx}{the index of effective genotyped individuals used in analysis}
 
 \item{cpu}{the number of cpu}
 
 \item{verbose}{whether to print detail.}
+
+\item{checkNA}{whether to check NA in genotype.}
 }
 \value{
 K, n * n matrix

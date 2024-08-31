@@ -26,7 +26,7 @@ NULL
 #' @importFrom parallel detectCores
 NULL
 
-#' @importFrom utils read.delim read.table write.table write.csv memory.limit packageVersion
+#' @importFrom utils read.delim read.table write.table write.csv memory.limit packageVersion sessionInfo
 NULL
 
 #' @importFrom bigmemory is.big.matrix

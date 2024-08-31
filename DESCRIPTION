@@ -2,8 +2,8 @@ Package: rMVP
 Type: Package
 Title: Memory-Efficient, Visualize-Enhanced, Parallel-Accelerated GWAS
         Tool
-Version: 1.0.8
-Date: 2023-11-27
+Version: 1.1.1
+Date: 2024-09-01
 Authors@R: c( person("Lilin", "Yin", role = "aut"), 
               person("Haohao", "Zhang", role = "aut"),
               person("Zhenshuang", "Tang", role = "aut"),
@@ -58,6 +58,6 @@ Author: Lilin Yin [aut],
   Hyunmin Kang [ctb],
   Xiang Zhou [ctb],
   Xiaolei Liu [cre, aut, cph]
-Packaged: 2023-11-27 08:51:59 UTC; hyacz
+Packaged: 2024-08-30 07:53:24 UTC; yinll
 Repository: CRAN
-Date/Publication: 2023-11-27 09:20:03 UTC
+Date/Publication: 2024-08-31 14:50:02 UTC
