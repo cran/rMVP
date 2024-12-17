@@ -25,12 +25,12 @@
 #'
 #' @examples
 #' MVP.Version()
-MVP.Version <- function(width=60, verbose=TRUE) {
+MVP.Version <- function(width=65, verbose=TRUE) {
     welcome <- "Welcome to MVP"
-    title   <- "A Memory-efficient, Visualization-enhanced, and Parallel-accelerated Tool For GWAS"
-    authors <- c("Designed and Maintained by Lilin Yin, Haohao Zhang, and Xiaolei Liu", 
+    title   <- "an R package for Memory-efficient, Visualization-enhanced and Parallel-accelerated genome-wide association study"
+    authors <- c("Design & Maintain: Lilin Yin, Haohao Zhang, and Xiaolei Liu", 
                  "Contributors: Zhenshuang Tang, Jingya Xu, Dong Yin, Zhiwu Zhang, Xiaohui Yuan, Mengjin Zhu, Shuhong Zhao, Xinyun Li")
-    contact <- "Contact: xiaoleiliu@mail.hzau.edu.cn"
+    contact <- "Mailto: xiaoleiliu@mail.hzau.edu.cn, ylilin@mail.hzau.edu.cn"
     logo_s  <- c(" __  __  __   __  ___",
                  "|  \\/  | \\ \\ / / | _ \\",
                  "| |\\/| |  \\ V /  |  _/",
@@ -367,10 +367,15 @@ mkl_env <- function(exprs, threads = 1) {
     if (load_if_installed("RevoUtilsMath")) {
         math.cores <- eval(parse(text = "getMKLthreads()"))
         eval(parse(text = "setMKLthreads(threads)"))
+    }else{
+        math.cores <- blas_get_num_procs()
+        blas_set_num_threads(threads)
     }
     result <- exprs
     if (load_if_installed("RevoUtilsMath")) {
         eval(parse(text = "setMKLthreads(math.cores)"))
+    }else{
+        blas_set_num_threads(math.cores)
     }
     return(result)
 }

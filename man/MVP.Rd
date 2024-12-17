@@ -20,6 +20,7 @@ MVP(
   ncpus = detectCores(logical = FALSE),
   vc.method = c("BRENT", "EMMA", "HE"),
   method = c("GLM", "MLM", "FarmCPU"),
+  maf = NULL,
   p.threshold = NA,
   QTN.threshold = 0.01,
   method.bin = "static",
@@ -42,7 +43,7 @@ MVP(
 \arguments{
 \item{phe}{phenotype, n * 2 matrix, n is sample size}
 
-\item{geno}{Genotype in bigmatrix format; m * n, m is marker size, n is sample size}
+\item{geno}{genotype, either m by n or n by m is supportable, m is marker size, n is population size}
 
 \item{map}{SNP map information, SNP name, Chr, Pos}
 
@@ -70,6 +71,8 @@ MVP(
 
 \item{method}{the GWAS model, "GLM", "MLM", and "FarmCPU", models can be selected simutaneously, i.e. c("GLM", "MLM", "FarmCPU")}
 
+\item{maf}{the threshold of minor allele frequency to filter SNPs in analysis}
+
 \item{p.threshold}{if all p values generated in the first iteration are bigger than p.threshold, FarmCPU stops}
 
 \item{QTN.threshold}{in second and later iterations, only SNPs with lower p-values than QTN.threshold have chances to be selected as pseudo QTNs}
@@ -88,7 +91,7 @@ MVP(
 
 \item{memo}{Character. A text marker on output files}
 
-\item{outpath}{Effective only when file.output = TRUE, determines the path of the output file}
+\item{outpath}{the path of the output files}
 
 \item{col}{for color of points in each chromosome on manhattan plot}
 
@@ -103,7 +106,6 @@ MVP(
 \item{verbose}{whether to print detail.}
 }
 \value{
-a m * 2 matrix, the first column is the SNP effect, the second column is the P values
 Output: MVP.return$map - SNP map information, SNP name, Chr, Pos
 Output: MVP.return$glm.results - p-values obtained by GLM method
 Output: MVP.return$mlm.results - p-values obtained by MLM method
@@ -114,10 +116,6 @@ Object 1: To perform GWAS using General Linear Model (GLM), Mixed Linear Model (
 Object 2: To calculate kinship among individuals using Varaden method
 Object 3: Estimate variance components using EMMA, FaST-LMM, and HE regression
 Object 4: Generate high-quality figures
-}
-\details{
-Build date: Aug 30, 2017
-Last update: Dec 14, 2018
 }
 \examples{
 \donttest{

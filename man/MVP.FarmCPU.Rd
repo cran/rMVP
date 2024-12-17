@@ -9,7 +9,8 @@ MVP.FarmCPU(
   geno,
   map,
   CV = NULL,
-  geno_ind_idx = NULL,
+  ind_idx = NULL,
+  mrk_idx = NULL,
   P = NULL,
   method.sub = "reward",
   method.sub.final = "reward",
@@ -20,6 +21,7 @@ MVP.FarmCPU(
   Prior = NULL,
   ncpus = 2,
   maxLoop = 10,
+  maxLine = 5000,
   threshold.output = 0.01,
   converge = 1,
   iteration.output = FALSE,
@@ -32,13 +34,15 @@ MVP.FarmCPU(
 \arguments{
 \item{phe}{phenotype, n by t matrix, n is sample size, t is number of phenotypes}
 
-\item{geno}{genotype, m by n matrix, m is marker size, n is sample size. This is Pure Genotype Data Matrix(GD). THERE IS NO COLUMN FOR TAXA.}
+\item{geno}{genotype, either m by n or n by m is supportable, m is marker size, n is population size. This is Pure Genotype Data Matrix(GD). THERE IS NO COLUMN FOR TAXA.}
 
 \item{map}{SNP map information, m by 3 matrix, m is marker size, the three columns are SNP_ID, Chr, and Pos}
 
 \item{CV}{covariates, n by c matrix, n is sample size, c is number of covariates}
 
-\item{geno_ind_idx}{the index of effective genotyped individuals}
+\item{ind_idx}{the index of effective genotyped individuals}
+
+\item{mrk_idx}{the index of effective markers used in analysis}
 
 \item{P}{start p values for all SNPs}
 
@@ -59,6 +63,8 @@ MVP.FarmCPU(
 \item{ncpus}{number of threads used for parallele computation}
 
 \item{maxLoop}{maximum number of iterations}
+
+\item{maxLine}{the number of markers handled at a time, smaller value would reduce the memory cost}
 
 \item{threshold.output}{only the GWAS results with p-values lower than threshold.output will be output}
 
@@ -91,7 +97,7 @@ phenotype <- phenotype[idx, ]
 print(dim(phenotype))
 genoPath <- system.file("extdata", "06_mvp-impute", "mvp.imp.geno.desc", package = "rMVP")
 genotype <- attach.big.matrix(genoPath)
-genotype <- deepcopy(genotype, cols=idx)
+genotype <- deepcopy(genotype, rows=idx)
 print(dim(genotype))
 mapPath <- system.file("extdata", "06_mvp-impute", "mvp.imp.geno.map", package = "rMVP")
 map <- read.table(mapPath , head = TRUE)
