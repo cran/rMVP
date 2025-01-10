@@ -190,9 +190,6 @@ function(phe, geno, map, K=NULL, nPC.GLM=NULL, nPC.MLM=NULL, nPC.FarmCPU=NULL,
         }
     }
 
-    logging.log("Check if NAs exist in genotype...", "\n", verbose = verbose)
-    if(hasNA(geno@address, mrkbycol = MrkByCol, geno_ind = seqTaxa, threads = ncpus))   stop("NA is not allowed in genotype, use 'MVP.Data.impute' to impute.")
-
     logging.log("Calculate allele frequency...", "\n", verbose = verbose)
     marker_freq <- BigRowMean(geno@address, MrkByCol, threads = ncpus, geno_ind = seqTaxa) / 2
     map$MAF <- ifelse(marker_freq > 0.5, 1 - marker_freq, marker_freq)
@@ -340,7 +337,7 @@ function(phe, geno, map, K=NULL, nPC.GLM=NULL, nPC.MLM=NULL, nPC.FarmCPU=NULL,
     logging.log("-------------------------GWAS Start-------------------------", "\n", verbose = verbose)
     if (glm.run) {
         logging.log("General Linear Model (GLM) Start...", "\n", verbose = verbose)
-        glm.results <- MVP.GLM(phe=phe, geno=geno, CV=CV.GLM, ind_idx=seqTaxa, mrk_idx=geno_marker_index, maxLine = maxLine, cpu=ncpus, verbose = verbose);gc()
+        glm.results <- MVP.GLM(phe=phe, geno=geno, CV=CV.GLM, ind_idx=seqTaxa, mrk_idx=geno_marker_index, mrk_bycol = MrkByCol, maxLine = maxLine, cpu=ncpus, verbose = verbose);gc()
         colnames(glm.results) <- c("Effect", "SE", paste(colnames(phe)[2],"GLM",sep="."))
         z = glm.results[, 1]/glm.results[, 2]
         lambda = median(z^2, na.rm=TRUE)/qchisq(1/2, df = 1,lower.tail=FALSE)
@@ -355,7 +352,7 @@ function(phe, geno, map, K=NULL, nPC.GLM=NULL, nPC.MLM=NULL, nPC.FarmCPU=NULL,
 
     if (mlm.run) {
         logging.log("Mixed Linear Model (MLM) Start...", "\n", verbose = verbose)
-        mlm.results <- MVP.MLM(phe=phe, geno=geno, K=K, eigenK=eigenK, CV=CV.MLM, ind_idx=seqTaxa, mrk_idx=geno_marker_index, maxLine = maxLine, cpu=ncpus, vc.method=vc.method, verbose = verbose);gc()
+        mlm.results <- MVP.MLM(phe=phe, geno=geno, K=K, eigenK=eigenK, CV=CV.MLM, ind_idx=seqTaxa, mrk_idx=geno_marker_index, mrk_bycol = MrkByCol, maxLine = maxLine, cpu=ncpus, vc.method=vc.method, verbose = verbose);gc()
         colnames(mlm.results) <- c("Effect", "SE", paste(colnames(phe)[2],"MLM",sep="."))
         z = mlm.results[, 1]/mlm.results[, 2]
         lambda = median(z^2, na.rm=TRUE)/qchisq(1/2, df = 1,lower.tail=FALSE)
